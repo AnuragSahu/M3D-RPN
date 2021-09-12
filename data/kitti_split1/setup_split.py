@@ -3,6 +3,7 @@ from getopt import getopt
 import scipy.io as sio
 import matplotlib.pyplot as plt
 from matplotlib.path import Path
+from shutil import copyfile
 import numpy as np
 import pprint
 import sys
@@ -63,6 +64,7 @@ print('Linking train')
 text_file = open(tra_file, 'r')
 
 imind = 0
+MAKE_COPY = True
 
 for line in text_file:
 
@@ -73,23 +75,43 @@ for line in text_file:
         id = str(parsed[0])
         new_id = '{:06d}'.format(imind)
 
-        if not os.path.exists(os.path.join(kitti_tra['cal'], str(new_id) + '.txt')):
-            os.symlink(os.path.join(kitti_raw['cal'], str(id) + '.txt'), os.path.join(kitti_tra['cal'], str(new_id) + '.txt'))
+        if(not MAKE_COPY):
+            if not os.path.exists(os.path.join(kitti_tra['cal'], str(new_id) + '.txt')):
+                os.symlink(os.path.join(kitti_raw['cal'], str(id) + '.txt'), os.path.join(kitti_tra['cal'], str(new_id) + '.txt'))
 
-        if not os.path.exists(os.path.join(kitti_tra['ims'], str(new_id) + '.png')):
-            os.symlink(os.path.join(kitti_raw['ims'], str(id) + '.png'), os.path.join(kitti_tra['ims'], str(new_id) + '.png'))
+            if not os.path.exists(os.path.join(kitti_tra['ims'], str(new_id) + '.png')):
+                os.symlink(os.path.join(kitti_raw['ims'], str(id) + '.png'), os.path.join(kitti_tra['ims'], str(new_id) + '.png'))
 
-        if not os.path.exists(os.path.join(kitti_tra['pre'], str(new_id) + '_01.png')):
-            os.symlink(os.path.join(kitti_raw['pre'], str(id) + '_01.png'), os.path.join(kitti_tra['pre'], str(new_id) + '_01.png'))
+            if not os.path.exists(os.path.join(kitti_tra['pre'], str(new_id) + '_01.png')):
+                os.symlink(os.path.join(kitti_raw['pre'], str(id) + '_01.png'), os.path.join(kitti_tra['pre'], str(new_id) + '_01.png'))
 
-        if not os.path.exists(os.path.join(kitti_tra['pre'], str(new_id) + '_02.png')):
-            os.symlink(os.path.join(kitti_raw['pre'], str(id) + '_02.png'), os.path.join(kitti_tra['pre'], str(new_id) + '_02.png'))
+            if not os.path.exists(os.path.join(kitti_tra['pre'], str(new_id) + '_02.png')):
+                os.symlink(os.path.join(kitti_raw['pre'], str(id) + '_02.png'), os.path.join(kitti_tra['pre'], str(new_id) + '_02.png'))
 
-        if not os.path.exists(os.path.join(kitti_tra['pre'], str(new_id) + '_03.png')):
-            os.symlink(os.path.join(kitti_raw['pre'], str(id) + '_03.png'), os.path.join(kitti_tra['pre'], str(new_id) + '_03.png'))
+            if not os.path.exists(os.path.join(kitti_tra['pre'], str(new_id) + '_03.png')):
+                os.symlink(os.path.join(kitti_raw['pre'], str(id) + '_03.png'), os.path.join(kitti_tra['pre'], str(new_id) + '_03.png'))
 
-        if not os.path.exists(os.path.join(kitti_tra['lab'], str(new_id) + '.txt')):
-            os.symlink(os.path.join(kitti_raw['lab'], str(id) + '.txt'), os.path.join(kitti_tra['lab'], str(new_id) + '.txt'))
+            if not os.path.exists(os.path.join(kitti_tra['lab'], str(new_id) + '.txt')):
+                os.symlink(os.path.join(kitti_raw['lab'], str(id) + '.txt'), os.path.join(kitti_tra['lab'], str(new_id) + '.txt'))
+        
+        else:
+            if not os.path.exists(os.path.join(kitti_tra['cal'], str(new_id) + '.txt')):
+                copyfile(os.path.join(kitti_raw['cal'], str(id) + '.txt'), os.path.join(kitti_tra['cal'], str(new_id) + '.txt'))
+
+            if not os.path.exists(os.path.join(kitti_tra['ims'], str(new_id) + '.png')):
+                copyfile(os.path.join(kitti_raw['ims'], str(id) + '.png'), os.path.join(kitti_tra['ims'], str(new_id) + '.png'))
+
+            if not os.path.exists(os.path.join(kitti_tra['pre'], str(new_id) + '_01.png')):
+                copyfile(os.path.join(kitti_raw['pre'], str(id) + '_01.png'), os.path.join(kitti_tra['pre'], str(new_id) + '_01.png'))
+
+            if not os.path.exists(os.path.join(kitti_tra['pre'], str(new_id) + '_02.png')):
+                copyfile(os.path.join(kitti_raw['pre'], str(id) + '_02.png'), os.path.join(kitti_tra['pre'], str(new_id) + '_02.png'))
+
+            if not os.path.exists(os.path.join(kitti_tra['pre'], str(new_id) + '_03.png')):
+                copyfile(os.path.join(kitti_raw['pre'], str(id) + '_03.png'), os.path.join(kitti_tra['pre'], str(new_id) + '_03.png'))
+
+            if not os.path.exists(os.path.join(kitti_tra['lab'], str(new_id) + '.txt')):
+                copyfile(os.path.join(kitti_raw['lab'], str(id) + '.txt'), os.path.join(kitti_tra['lab'], str(new_id) + '.txt'))
 
         imind += 1
 

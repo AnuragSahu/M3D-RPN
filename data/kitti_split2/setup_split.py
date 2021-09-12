@@ -3,6 +3,7 @@ from getopt import getopt
 import scipy.io as sio
 import matplotlib.pyplot as plt
 from matplotlib.path import Path
+from shutil import copyfile
 import numpy as np
 import pprint
 import sys
@@ -57,21 +58,32 @@ mkdir_if_missing(kitti_val['lab'])
 print('Linking {} train'.format(split_data['ids_train'][0].shape[0]))
 
 imind = 0
+MAKE_COPY = True
 
 for id_num in split_data['ids_train'][0]:
 
     id = '{:06d}'.format(id_num)
     new_id = '{:06d}'.format(imind)
 
-    if not os.path.exists(os.path.join(kitti_tra['cal'], str(new_id) + '.txt')):
-        os.symlink(os.path.join(kitti_raw['cal'], str(id) + '.txt'), os.path.join(kitti_tra['cal'], str(new_id) + '.txt'))
+    if(not MAKE_COPY):
+        if not os.path.exists(os.path.join(kitti_tra['cal'], str(new_id) + '.txt')):
+            os.symlink(os.path.join(kitti_raw['cal'], str(id) + '.txt'), os.path.join(kitti_tra['cal'], str(new_id) + '.txt'))
 
-    if not os.path.exists(os.path.join(kitti_tra['ims'], str(new_id) + '.png')):
-        os.symlink(os.path.join(kitti_raw['ims'], str(id) + '.png'), os.path.join(kitti_tra['ims'], str(new_id) + '.png'))
+        if not os.path.exists(os.path.join(kitti_tra['ims'], str(new_id) + '.png')):
+            os.symlink(os.path.join(kitti_raw['ims'], str(id) + '.png'), os.path.join(kitti_tra['ims'], str(new_id) + '.png'))
 
-    if not os.path.exists(os.path.join(kitti_tra['lab'], str(new_id) + '.txt')):
-        os.symlink(os.path.join(kitti_raw['lab'], str(id) + '.txt'), os.path.join(kitti_tra['lab'], str(new_id) + '.txt'))
+        if not os.path.exists(os.path.join(kitti_tra['lab'], str(new_id) + '.txt')):
+            os.symlink(os.path.join(kitti_raw['lab'], str(id) + '.txt'), os.path.join(kitti_tra['lab'], str(new_id) + '.txt'))
 
+    else:
+        if not os.path.exists(os.path.join(kitti_tra['cal'], str(new_id) + '.txt')):
+            copyfile(os.path.join(kitti_raw['cal'], str(id) + '.txt'), os.path.join(kitti_tra['cal'], str(new_id) + '.txt'))
+
+        if not os.path.exists(os.path.join(kitti_tra['ims'], str(new_id) + '.png')):
+            copyfile(os.path.join(kitti_raw['ims'], str(id) + '.png'), os.path.join(kitti_tra['ims'], str(new_id) + '.png'))
+
+        if not os.path.exists(os.path.join(kitti_tra['lab'], str(new_id) + '.txt')):
+            copyfile(os.path.join(kitti_raw['lab'], str(id) + '.txt'), os.path.join(kitti_tra['lab'], str(new_id) + '.txt'))
     imind += 1
 
 print('Linking {} val'.format(split_data['ids_val'][0].shape[0]))
